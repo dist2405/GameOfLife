@@ -55,7 +55,7 @@ function neighbours(row, col){
 	for(r=row-1;r<=row+1;r++){
 		for(c=col-1;c<=col+1;c++){
             
-            if(r>0 && c>0){
+            if(r>-1 && c>-1){
             if (r<maxdim && c<maxdim){
                  if(row ==r && col ==c){
 
