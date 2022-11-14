@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>Conway's Game of Life</title>
+<style>
+tr	{height: 25px;}
+td	{width: 20px;}
+th	{width: 20px;}
+</style>
+<script language="JavaScript">
+var maxdim=10
+
+// a function to turn a row and column number into an HTML element
+function toel(r,c){ return document.getElementById(r+""+c) }
+
+// functions to check whether an HTML element is alive/set or dead/clear
+function isset(el){ return(el.innerHTML=="X") }
+function isclear(el){ return(!isset(el)) }
+
+// functions to make an HTML element alive/set or dead/clear
+function set(el){ el.innerHTML="X" }
+function clear(el){ el.innerHTML="&nbsp;" }
+
+//if the user clicks on a cell, its status should be toggled between alive and dead
+function doClick(el){
+    if(isset(el)){
+	   clear(el);
+    }else{
+        set(el);
+    };
+	};
+
+//Initialise the next generation board (10 rows, 10 cols) so that all the squares are empty/dead
+live=[
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	[false,false,false,false,false,false,false,false,false,false],
+	]
+
+//Count up how many neighbours a cell has, remembering not to try and count
+//cells that are off the board. Also a cell is not a neighbour of itself.
+//This needs to loop around all the cells in the rows and columns that
+//are -1, 0 and +1 offset from the current cell. If one of those HTML table
+//cell elements is "set" (ie it has an X in it) then it is a neighbour.
+function neighbours(row, col){
+	var r,c,count;
+	count=0
+    
+	for(r=row-1;r<=row+1;r++){
+		for(c=col-1;c<=col+1;c++){
+            
+            if(r>0 && c>0){
+            if (r<maxdim && c<maxdim){
+                 if(row ==r && col ==c){
+
+                 }else{
+                    if(isset(toel(r,c))){
+                                count = count+1;
+                            };
+                           
+                        };  
+                    };
+                };     
+            };
+                
+            };
+		
+       
+	return count;
+	};
+
+// Redraw the screen with a new generation.
+//First of all set the live array with values that represent whether
+//each cell will live or die on the next turn, and then paint the
+//cells in the table according to the boolean values in the live array
+function redraw(){
+	//loop around all the entries in the live array and set
+	//their values according to John Conway's rules for
+	//survival, birth or death
+	for(row=0;row<maxdim; row++){
+		for(col=0; col<maxdim; col++){
+			live[row][col]=false;
+			n=neighbours(row,col)
+            if(n==2){
+                live[row][col]=isset(toel(row,col));
+            };
+            if(n==3){
+                live[row][col]=true;
+                
+			};
+		};
+    };
+
+	//then loop around all the HTML table cells and fill
+	//them in according to whether the live entry is set or not
+	//don't forget that you need to convert a row and column index into an HTML element using "toel"
+	for(row=0;row<maxdim; row++){
+		for(col=0; col<maxdim; col++){
+            m= toel(row,col);
+			if(live[row][col]){
+                set(m);
+			}else{
+                clear(m);
+            };
+		};
+	};
+};
+
+</script>
+<body>
+<h2>Conway's Game of Life </h2>
+<!-- This is the table that acts as the board -->
+<!-- Each cell has an id that represents its position in the array
+     e.g. id="45" corresponds to live[4][5] -->
+<!-- Also, the onClick event handler will call the function "doClick"
+     with a parameter which is the HTML element that was clicked in.
+     That allows us to turn cells on and off by clicking in them. -->
+<table id="foo" border="1" onclick="doClick(event.srcElement?event.srcElement:event.target)">
+<tr> <th></th><th>0</th> <th>1</th> <th>2</th> <th>3</th> <th>4</th> <th>5</th> <th>6</th> <th>7</th> <th>8</th> <th>9</th> </tr>
+<tr>&nbsp;<th>0</th> <td id="00">&nbsp;</td> <td id="01">&nbsp;</td> <td id="02">&nbsp;</td> <td id="03">&nbsp;</td> <td id="04">&nbsp;</td> <td id="05">&nbsp;</td> <td id="06">&nbsp;</td> <td id="07">&nbsp;</td> <td id="08">&nbsp;</td> <td id="09">&nbsp;</td> </tr>
+<tr>&nbsp;<th>1</th> <td id="10">&nbsp;</td> <td id="11">&nbsp;</td> <td id="12">&nbsp;</td> <td id="13">&nbsp;</td> <td id="14">&nbsp;</td> <td id="15">&nbsp;</td> <td id="16">&nbsp;</td> <td id="17">&nbsp;</td> <td id="18">&nbsp;</td> <td id="19">&nbsp;</td> </tr>
+<tr>&nbsp;<th>2</th> <td id="20">&nbsp;</td> <td id="21">&nbsp;</td> <td id="22">X</td> <td id="23">X</td> <td id="24">X</td> <td id="25">&nbsp;</td> <td id="26">&nbsp;</td> <td id="27">&nbsp;</td> <td id="28">&nbsp;</td> <td id="29">&nbsp;</td> </tr>
+<tr>&nbsp;<th>3</th> <td id="30">&nbsp;</td> <td id="31">&nbsp;</td> <td id="32">&nbsp;</td> <td id="33">&nbsp;</td> <td id="34">&nbsp;</td> <td id="35">&nbsp;</td> <td id="36">&nbsp;</td> <td id="37">&nbsp;</td> <td id="38">&nbsp;</td> <td id="39">&nbsp;</td> </tr>
+<tr>&nbsp;<th>4</th> <td id="40">&nbsp;</td> <td id="41">&nbsp;</td> <td id="42">&nbsp;</td> <td id="43">&nbsp;</td> <td id="44">&nbsp;</td> <td id="45">&nbsp;</td> <td id="46">&nbsp;</td> <td id="47">&nbsp;</td> <td id="48">&nbsp;</td> <td id="49">&nbsp;</td> </tr>
+<tr>&nbsp;<th>5</th> <td id="50">&nbsp;</td> <td id="51">&nbsp;</td> <td id="52">&nbsp;</td> <td id="53">&nbsp;</td> <td id="54">&nbsp;</td> <td id="55">&nbsp;</td> <td id="56">&nbsp;</td> <td id="57">&nbsp;</td> <td id="58">&nbsp;</td> <td id="59">&nbsp;</td> </tr>
+<tr>&nbsp;<th>6</th> <td id="60">&nbsp;</td> <td id="61">&nbsp;</td> <td id="62">&nbsp;</td> <td id="63">&nbsp;</td> <td id="64">&nbsp;</td> <td id="65">&nbsp;</td> <td id="66">&nbsp;</td> <td id="67">&nbsp;</td> <td id="68">&nbsp;</td> <td id="69">&nbsp;</td> </tr>
+<tr>&nbsp;<th>7</th> <td id="70">&nbsp;</td> <td id="71">&nbsp;</td> <td id="72">&nbsp;</td> <td id="73">&nbsp;</td> <td id="74">&nbsp;</td> <td id="75">&nbsp;</td> <td id="76">&nbsp;</td> <td id="77">&nbsp;</td> <td id="78">&nbsp;</td> <td id="79">&nbsp;</td> </tr>
+<tr>&nbsp;<th>8</th> <td id="80">&nbsp;</td> <td id="81">&nbsp;</td> <td id="82">&nbsp;</td> <td id="83">&nbsp;</td> <td id="84">&nbsp;</td> <td id="85">&nbsp;</td> <td id="86">&nbsp;</td> <td id="87">&nbsp;</td> <td id="88">&nbsp;</td> <td id="89">&nbsp;</td> </tr>
+<tr>&nbsp;<th>9</th> <td id="90">&nbsp;</td> <td id="91">&nbsp;</td> <td id="92">&nbsp;</td> <td id="93">&nbsp;</td> <td id="94">&nbsp;</td> <td id="95">&nbsp;</td> <td id="96">&nbsp;</td> <td id="97">&nbsp;</td> <td id="98">&nbsp;</td> <td id="99">&nbsp;</td> </tr>
+</table>
+
+<input type="button" onClick="redraw()" value="Click to Advance a Generation"/>
+</body>
+</html>
